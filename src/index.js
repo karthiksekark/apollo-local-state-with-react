@@ -1,14 +1,69 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
+import "./index.css";
+import CounterButton from "./components/common/CounterButton";
+import DisplayCounter from "./components/counter/displayCounter";
+import { useFetchCounter } from "./apollo/hooks";
+import * as serviceWorker from "./serviceWorker";
+
+const client = new ApolloClient({
+  clientState: {
+    defaults: {
+      counter: 0,
+    },
+  },
+});
+
+const App = () => {
+  const { data, client } = useFetchCounter();
+  return (
+    <React.StrictMode>
+      <DisplayCounter counter={data.counter} />
+      <CounterButton
+        text="Increment Counter"
+        color="primary"
+        onAction={() =>
+          client.writeData({
+            data: {
+              counter: data.counter + 1,
+            },
+          })
+        }
+      />
+      <CounterButton
+        text="Decrement Counter"
+        color="secondary"
+        counter={data.counter}
+        onAction={() =>
+          client.writeData({
+            data: {
+              counter: data.counter - 1,
+            },
+          })
+        }
+      />
+      <CounterButton
+        text="Reset Counter"
+        counter={data.counter}
+        onAction={() =>
+          client.writeData({
+            data: {
+              counter: 0,
+            },
+          })
+        }
+      />
+    </React.StrictMode>
+  );
+};
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ApolloProvider client={client}>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </ApolloProvider>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
