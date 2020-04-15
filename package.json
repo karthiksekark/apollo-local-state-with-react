@@ -1,6 +1,6 @@
 {
   "homepage": "http://karthiksekark.github.io/local-state-management",
-  "name": "local-state-management",
+  "name": "apollo-local-state-with-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
